@@ -21,4 +21,4 @@ steps:
 - task: Docker@2
   inputs:
     command: 'build'
-    Dockerfile: 'src/DevOpsChallenge.SalesApi'
+    Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'

@@ -10,18 +10,20 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
 
 - task: Docker@2
   inputs:
     containerRegistry: 'MertSenel GitHub Container Registry'
     repository: 'mertsenel/devopschallengesalesapi'
-    command: 'buildAndPush'
+    command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'
+
+- script: |
+    export unittestslayerid=$(docker images --filter "label=unittestlayer=true" -q)
+    docker create --name unittestcontainer $unittestslayerid
+    docker cp unittestcontainer:/out/testresults ./testresults
+    docker stop unittestcontainer
+    docker rm unittestcontainer
+  displayName: Run unit tests
+  continueOnError: false

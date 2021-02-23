@@ -1,5 +1,11 @@
 # DevOps Challenge (.NET)
 
+## Solution
+
+[![Build Status](https://dev.azure.com/mertsenel/dotnet-devops-challenge/_apis/build/status/MertSenel.dotnet-devops-challenge?branchName=main)](https://dev.azure.com/mertsenel/dotnet-devops-challenge/_build/latest?definitionId=27&branchName=main)
+
+
+
 ## Introduction :wave:
 
 This challenge utilises the broad range of skills required by a DevOps Engineer. It focuses on DevOps for a .NET 5 application.

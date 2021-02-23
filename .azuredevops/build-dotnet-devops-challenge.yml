@@ -20,5 +20,8 @@ steps:
 
 - task: Docker@2
   inputs:
-    command: 'build'
+    containerRegistry: 'MertSenel GitHub Container Registry'
+    repository: 'mertsenel/devopschallengesalesapi'
+    command: 'buildAndPush'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
+    buildContext: '$(Build.Repository.LocalPath)'

@@ -29,6 +29,11 @@ Build Pipeline:
  - Has been fixed via [commit](https://github.com/MertSenel/dotnet-devops-challenge/pull/1/commits/8477310186b8e3f57f05170e21cf86663a26a76c)
    The XML comments are now visible in swagger UI. 
 
+[x] **The security team have identified the application is revealing the technology used by sending the response header `Server: Kestrel`. This header should not be present in responses sent by the server.**
+
+- Has been fixed via [commit](https://github.com/MertSenel/dotnet-devops-challenge/commit/d4987fac8e527748acf73701ff19d1c3ccd12030) 
+  The Header is now removed from server responses.
+
 ### Improvements
 
 - Running Unit Tests in CI pipeline within Docker Build and publishing test results.

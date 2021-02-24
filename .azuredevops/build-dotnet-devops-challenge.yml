@@ -9,19 +9,40 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  imageName: 'mertsenel/devopschallengesalesapi'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+
+steps:
 
 - task: Docker@2
+  displayName: Docker Build & Unit Tests
   inputs:
     containerRegistry: 'MertSenel GitHub Container Registry'
-    repository: 'mertsenel/devopschallengesalesapi'
-    command: 'buildAndPush'
+    repository: '$(imageName)'
+    command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'
+
+- pwsh: |
+    $id=docker images --filter "label=test=true" -q | Select-Object -First 1
+    docker create --name testcontainer $id
+    docker cp testcontainer:/testresults ./testresults
+    docker rm testcontainer
+  displayName: 'Copy test results'
+  condition: succeededOrFailed()
+   
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+  displayName: 'Publish test results'
+  condition: succeededOrFailed()
+
+- task: Docker@2
+  displayName: Docker Push Container Image
+  inputs:
+    containerRegistry: 'MertSenel GitHub Container Registry'
+    repository: $(imageName)
+    command: 'push'

@@ -9,15 +9,20 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  imageName: 'mertsenel/devopschallengesalesapi'
+
+
 steps:
 
 - task: Docker@2
   displayName: Docker Build & Unit Tests
   inputs:
+    containerRegistry: 'MertSenel GitHub Container Registry'
+    repository: '$(imageName)'
     command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'
-    arguments: '--target test'
 
 - pwsh: |
     $id=docker images --filter "label=test=true" -q | Select-Object -First 1
@@ -25,6 +30,7 @@ steps:
     docker cp testcontainer:/testresults ./testresults
     docker rm testcontainer
   displayName: 'Copy test results'
+  condition: succeededOrFailed()
    
 - task: PublishTestResults@2
   inputs:
@@ -32,3 +38,11 @@ steps:
     testResultsFiles: '**/*.trx'
     searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
   displayName: 'Publish test results'
+  condition: succeededOrFailed()
+
+- task: Docker@2
+  displayName: Docker Push Container Image
+  inputs:
+    containerRegistry: 'MertSenel GitHub Container Registry'
+    repository: $(imageName)
+    command: 'push'

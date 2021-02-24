@@ -39,6 +39,7 @@ steps:
   condition: succeededOrFailed()
 
 - task: Docker@2
+  displayName: Docker Push Container Image
   inputs:
     containerRegistry: 'MertSenel GitHub Container Registry'
     repository: $(imageName)

@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  imageName: 'mertsenel/devopschallengesalesapi'
+
+
 steps:
 
 - task: Docker@2
@@ -37,5 +41,5 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'MertSenel GitHub Container Registry'
-    repository: 'mertsenel/devopschallengesalesapi'
+    repository: $(imageName)
     command: 'push'

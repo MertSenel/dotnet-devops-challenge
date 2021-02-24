@@ -16,18 +16,13 @@ COPY . .
 WORKDIR "/src/src/DevOpsChallenge.SalesApi"
 RUN dotnet build "DevOpsChallenge.SalesApi.csproj" -c Release -o /app/build
 
-FROM build as testrunner
-WORKDIR /tests/DevOpsChallenge.SalesApi.Business.UnitTests
-RUN dotnet tool install dotnet-reportgenerator-globaltool --tool-path /dotnetglobaltools
-LABEL unittestlayer=true
-RUN dotnet test --logger "trx;LogFileName=DevOpsChallenge.SalesApi.Business.UnitTests.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/out/testresults/coverage/ /p:Exclude="[xunit.*]*" --results-directory /out/testresults
-RUN /dotnetglobaltools/reportgenerator "-reports:/out/testresults/coverage/coverage.cobertura.xml" "-targetdir:/out/testresults/coverage/reports" "-reporttypes:HTMLInline;HTMLChart"
- 
 FROM build AS test
-LABEL test=true
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" tests/DevOpsChallenge.SalesApi.Business.UnitTests/DevOpsChallenge.SalesApi.Business.UnitTests.csproj
+LABEL test="true"
+WORKDIR /src/tests/DevOpsChallenge.SalesApi.Business.UnitTests
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" DevOpsChallenge.SalesApi.Business.UnitTests.csproj
 
 FROM build AS publish
+WORKDIR "/src/src/DevOpsChallenge.SalesApi"
 RUN dotnet publish "DevOpsChallenge.SalesApi.csproj" -c Release -o /app/publish
 
 FROM base AS final

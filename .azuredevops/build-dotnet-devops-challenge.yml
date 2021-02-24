@@ -12,18 +12,23 @@ pool:
 steps:
 
 - task: Docker@2
+  displayName: Docker Build & Unit Tests
   inputs:
-    containerRegistry: 'MertSenel GitHub Container Registry'
-    repository: 'mertsenel/devopschallengesalesapi'
     command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'
+    arguments: '--target test'
 
-- script: |
-    export unittestslayerid=$(docker images --filter "label=unittestlayer=true" -q)
-    docker create --name unittestcontainer $unittestslayerid
-    docker cp unittestcontainer:/out/testresults ./testresults
-    docker stop unittestcontainer
-    docker rm unittestcontainer
-  displayName: Run unit tests
-  continueOnError: false
+- pwsh: |
+    $id=docker images --filter "label=test=true" -q | Select-Object -First 1
+    docker create --name testcontainer $id
+    docker cp testcontainer:/testresults ./testresults
+    docker rm testcontainer
+  displayName: 'Copy test results'
+   
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+  displayName: 'Publish test results'

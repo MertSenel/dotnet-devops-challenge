@@ -18,6 +18,8 @@ steps:
 - task: Docker@2
   displayName: Docker Build & Unit Tests
   inputs:
+    containerRegistry: 'MertSenel GitHub Container Registry'
+    repository: '$(imageName)'
     command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'

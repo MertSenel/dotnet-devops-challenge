@@ -17,7 +17,6 @@ steps:
     command: 'build'
     Dockerfile: 'src/DevOpsChallenge.SalesApi/Dockerfile'
     buildContext: '$(Build.Repository.LocalPath)'
-    arguments: '--target test'
 
 - pwsh: |
     $id=docker images --filter "label=test=true" -q | Select-Object -First 1

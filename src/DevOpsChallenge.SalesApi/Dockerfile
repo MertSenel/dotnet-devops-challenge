@@ -18,8 +18,21 @@ RUN dotnet build "DevOpsChallenge.SalesApi.csproj" -c Release -o /app/build
 
 FROM build AS test
 LABEL test="true"
+RUN dotnet tool install dotnet-reportgenerator-globaltool --tool-path /dotnetglobaltools
 WORKDIR /src/tests/DevOpsChallenge.SalesApi.Business.UnitTests
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" DevOpsChallenge.SalesApi.Business.UnitTests.csproj
+RUN dotnet publish -c Release
+#RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" --collect:"XPlat Code Coverage" 
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/testresults/coverage/ /p:Exclude="[xunit.*]*" DevOpsChallenge.SalesApi.Business.UnitTests.csproj
+RUN /dotnetglobaltools/reportgenerator "-reports:/testresults/coverage/coverage.cobertura.xml" "-targetdir:/testresults/coverage/reports" "-reporttypes:HTMLInline;HTMLChart"
+ 
+FROM build AS publish
+RUN dotnet publish "dokerunittestspike.csproj" -c Release -o /app
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "dokerunittestspike.dll"]
+
 
 FROM build AS publish
 WORKDIR "/src/src/DevOpsChallenge.SalesApi"

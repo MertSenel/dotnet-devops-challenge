@@ -37,7 +37,9 @@ Build Pipeline:
 ### Improvements
 
 - Running Unit Tests in CI pipeline within Docker Build and publishing test results.
-- 
+- Assessing code coverage. 
+  - Neccessary packages added to unit tests project.
+  - Dockerfile and Pipeline changes required for producing and publishing code coverage report. 
 
 
 

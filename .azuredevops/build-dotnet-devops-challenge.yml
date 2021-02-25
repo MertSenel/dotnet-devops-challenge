@@ -40,6 +40,14 @@ steps:
   displayName: 'Publish test results'
   condition: succeededOrFailed()
 
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/testresults/coverage/coverage.cobertura.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/testresults/coverage/reports'
+  displayName: 'Publish coverage reports'
+  condition: succeededOrFailed()
+
 - task: Docker@2
   displayName: Docker Push Container Image
   inputs:

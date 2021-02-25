@@ -19,7 +19,7 @@ RUN dotnet build "DevOpsChallenge.SalesApi.csproj" -c Release -o /app/build
 FROM build AS test
 LABEL test="true"
 WORKDIR /src/tests/DevOpsChallenge.SalesApi.Business.UnitTests
-RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" DevOpsChallenge.SalesApi.Business.UnitTests.csproj
+RUN dotnet test -c Release --results-directory /testresults --logger "trx;LogFileName=test_results.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=/testresults/coverage/ /p:Exclude="[xunit.*]*" DevOpsChallenge.SalesApi.Business.UnitTests.csproj
 
 FROM build AS publish
 WORKDIR "/src/src/DevOpsChallenge.SalesApi"

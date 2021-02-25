@@ -23,6 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevOpsChallenge.SalesApi.Bu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevOpsChallenge.SalesApi.IntegrationTests", "tests\DevOpsChallenge.SalesApi.IntegrationTests\DevOpsChallenge.SalesApi.IntegrationTests.csproj", "{351F58A4-B6FA-4453-BAEA-6F78E9308298}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{0DFD02C2-BDA8-4848-9A69-7B3BCAA8B60B}"
+	ProjectSection(SolutionItems) = preProject
+		.azuredevops\build-dotnet-devops-challenge.yml = .azuredevops\build-dotnet-devops-challenge.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
